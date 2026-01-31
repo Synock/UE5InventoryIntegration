@@ -1,0 +1,4 @@
+[submodule "Plugins/UE5Inventory"]
+	path = Plugins/UE5Inventory
+	url = git@github.com:Synock/UE5Inventory.git
+	branch = DurabilityAndFixes
