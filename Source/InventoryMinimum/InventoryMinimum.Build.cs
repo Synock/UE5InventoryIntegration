@@ -18,7 +18,7 @@ public class InventoryMinimum : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
+			"Slate", "InventoryPlugin"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

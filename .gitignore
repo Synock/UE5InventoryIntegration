@@ -73,6 +73,9 @@ Plugins/*/Intermediate/
 # Cache files for the editor to use
 DerivedDataCache/
 
+# Developer plugins (IDE-specific, local only)
+Plugins/Developer/
+
 # Rider
 .idea/
 
