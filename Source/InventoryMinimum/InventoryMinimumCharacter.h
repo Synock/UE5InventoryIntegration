@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Interfaces/EquipmentInterface.h"
+#include "Interfaces/InventoryModularCharacterInterface.h"
 #include "InventoryMinimumCharacter.generated.h"
 
 class USpringArmComponent;
@@ -19,7 +21,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AInventoryMinimumCharacter : public ACharacter
+class AInventoryMinimumCharacter : public ACharacter, public IEquipmentInterface, public IInventoryModularCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -52,14 +54,25 @@ protected:
 public:
 
 	/** Constructor */
-	AInventoryMinimumCharacter();	
+	AInventoryMinimumCharacter();
+
+	virtual UEquipmentComponent* GetEquipmentComponent() override;
+	virtual const UEquipmentComponent* GetEquipmentComponentConst() const override;
+
+	virtual USkeletalMeshComponent* GetHelmetComponent() override;
+
 
 protected:
 
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
+
+	UPROPERTY(Replicated, BlueprintReadOnly, Category="Equipment")
+	UEquipmentComponent* EquipmentComponent;
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);

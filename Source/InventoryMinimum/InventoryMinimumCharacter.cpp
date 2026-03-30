@@ -11,6 +11,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "InventoryMinimum.h"
+#include "Components/EquipmentComponent.h"
+#include "Net/UnrealNetwork.h"
+
 
 AInventoryMinimumCharacter::AInventoryMinimumCharacter()
 {
@@ -45,6 +48,12 @@ AInventoryMinimumCharacter::AInventoryMinimumCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("EquipmentComponent"));
+	EquipmentComponent->SetNetAddressable();
+	EquipmentComponent->SetIsReplicated(true);
+
+	EquipmentComponent->UpdateMasterMeshComponent(GetMesh());
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -130,4 +139,27 @@ void AInventoryMinimumCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void AInventoryMinimumCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AInventoryMinimumCharacter, EquipmentComponent);
+}
+
+UEquipmentComponent* AInventoryMinimumCharacter::GetEquipmentComponent()
+{
+	return EquipmentComponent;
+}
+
+const UEquipmentComponent* AInventoryMinimumCharacter::GetEquipmentComponentConst() const
+{
+	return EquipmentComponent;
+}
+
+USkeletalMeshComponent* AInventoryMinimumCharacter::GetHelmetComponent()
+{
+	// Replace with a dedicated helmet component for modular mesh swap
+	return GetMesh();
 }
